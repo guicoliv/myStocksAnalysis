@@ -22,10 +22,16 @@ Future<List<QuoteDetail>> getQuotes(List symbols) async{
     //Timeout
     if(response == null) return null;
 
+    final data = jsonDecode(response.body);
+    if(data['status']['code'] == 204)
+      return null;
+
     //Possible Server problem?
     if (response.statusCode < 200 || response.statusCode > 400) {
       return null;
     }
+
+    print(jsonDecode(response.body));
 
     if (response.headers.containsKey('content-type')) {
       if (response.headers['content-type'].contains("application/json")) {
@@ -35,7 +41,7 @@ Future<List<QuoteDetail>> getQuotes(List symbols) async{
           var quoteDetail = QuoteDetail(
               item['symbol'] ?? "",
               item['exchange'] ?? "",
-              item['name'] ?? "",
+              item['name'] ?? item['symbol'],
               item['dayCode'] ?? "",
               item['mode'] ?? "",
               item['lastPrice'].toDouble() ?? null,
@@ -45,7 +51,7 @@ Future<List<QuoteDetail>> getQuotes(List symbols) async{
               item['open'].toDouble() ?? null,
               item['high'].toDouble() ?? null,
               item['low'].toDouble() ?? null,
-              item['close'].toDouble() ?? null,
+              null,
               item['flag'] ?? "",
               item['volume'].toDouble() ?? null,
           );
@@ -62,6 +68,7 @@ Future<List<QuoteDetail>> getQuotes(List symbols) async{
     return null;
   }
 }
+
 
 Future<List<KlineData>> getHistory(String symbol, String type) async{
   String url = baseUrl + "getHistory.json?apikey=" + getApiKey() + "&symbol=" + symbol + "&type=" + type + '&startDate=20200106';
@@ -91,7 +98,7 @@ Future<List<KlineData>> getHistory(String symbol, String type) async{
               low: item['low'].toDouble(),
               close: item['close'].toDouble(),
               vol: item['volume'].toDouble(),
-              date: 10000 * dateTemp.year + 100 * dateTemp.month + dateTemp.day);
+              date: 100000000 * dateTemp.year + 1000000 * dateTemp.month + 10000 * dateTemp.day + 100 * dateTemp.hour + dateTemp.minute);
           finalList.add(marketQuote);
         }
         return finalList;

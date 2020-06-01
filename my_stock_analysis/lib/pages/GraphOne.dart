@@ -25,7 +25,7 @@ class GraphOneState extends State<GraphOne> {
 
   @override
   Widget build(BuildContext context) {
-    if(bloc == null){
+    if (bloc == null) {
       bloc = KlineBloc();
     }
     getDataToBloc(bloc);
@@ -41,7 +41,6 @@ class GraphOneState extends State<GraphOne> {
           body: Container(
               child: Center(
             child: CircularProgressIndicator(),
-
           )));
     }
     return Scaffold(
@@ -51,14 +50,28 @@ class GraphOneState extends State<GraphOne> {
       body: Column(
         children: <Widget>[
           Container(
-            height: height - 200,
+            height: height - 180,
             child: KlinePage(bloc: bloc),
           ),
           Container(
               height: 100,
-              margin: EdgeInsets.only(left: 20, right: 20),
+              color: Colors.black,
+              padding: EdgeInsets.only(right: 20),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Text(widget.company.symbol ,
+                          style: TextStyle(
+                              fontSize: 28.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+
+                          ),
+                        softWrap: true,
+
+                      )),
                   FlatButton(
                     textColor: Colors.white,
                     color: Colors.blue,
@@ -90,23 +103,20 @@ class GraphOneState extends State<GraphOne> {
     bloc.openRealTime(false);
   }
 
-  void getDataToBloc(KlineBloc k){
+  void getDataToBloc(KlineBloc k) {
     List<KlineData> list = List<KlineData>();
-    if(k.stringList.length > 0)
-      return;
+    if (k.stringList.length > 0) return;
     print("gettting");
-    Future<List<KlineData>> apiCallResponse = getHistory(widget.company.symbol, 'daily');
+    Future<List<KlineData>> apiCallResponse =
+        getHistory(widget.company.symbol, 'daily');
     apiCallResponse.then((value) {
       print("got");
       list = value;
       k.updateDataList(list);
 
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
-
 }
 
 class KlinePageBloc extends KlineBloc {
@@ -115,13 +125,11 @@ class KlinePageBloc extends KlineBloc {
     super.initData();
     List<KlineData> list = List<KlineData>();
     number++;
-    if(number >= 10)
-      return;
+    if (number >= 10) return;
     Future<List<KlineData>> apiCallResponse = getHistory('AAPL', 'daily');
     apiCallResponse.then((value) {
       list = value;
       this.updateDataList(list);
-
     });
   }
 }

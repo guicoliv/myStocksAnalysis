@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mystockanalysis/http_request.dart';
 import 'package:mystockanalysis/models/Company.dart';
 
 
@@ -14,7 +15,8 @@ class AddCompany extends StatefulWidget {
 
 
 class AddCompanyState extends State<AddCompany> {
-
+  final nameController = TextEditingController();
+  final symbolController = TextEditingController();
 
 
 
@@ -62,7 +64,7 @@ class AddCompanyState extends State<AddCompany> {
                         new Flexible(
                           child: new TextField(
                               style: TextStyle(fontSize: 24.0),
-
+                              controller: nameController,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(10),
 
@@ -82,7 +84,7 @@ class AddCompanyState extends State<AddCompany> {
                         new Flexible(
                           child: new TextField(
                               style: TextStyle(fontSize: 24.0),
-
+                              controller: symbolController,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(10),
 
@@ -100,24 +102,26 @@ class AddCompanyState extends State<AddCompany> {
           tooltip: 'Increment Counter',
           child: Icon(Icons.check),
           onPressed: ()  {
+            getQuotes([symbolController.text]).then((value) {
+              if(value == null)
+                print("erro");
+              else{
+                widget.companies.add(new Company(id:widget.companies.length, symbol:value[0].symbol, name:value[0].name, favorite: false));
+                
+                
+                Navigator.pop(context, true);
+                
+              }
+            });
             //testar pedido
             //if result.status == 204
             //invalid
             //else
             //new company
-            Navigator.pop(context, true);
           },
         ));
 
   }
 
-  int countFavoritedCompanies(){
-    int count = 0;
-    for(Company c in widget.companies){
-      if(c.favorite)
-        count++;
-    }
-    return count;
-  }
 
 }
