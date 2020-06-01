@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mystockanalysis/SharedPreferencesManager.dart';
 import 'package:mystockanalysis/models/Company.dart';
+import 'package:mystockanalysis/pages/GraphOne.dart';
 import 'package:mystockanalysis/pages/SelectFavorite.dart';
 
 bool selected = false;
@@ -104,22 +105,32 @@ class HomePageState extends State<HomePage> {
 
     return FloatingActionButton(
       onPressed: () {
-        if (selComp1 == null && selComp2 == null) {
-          //selected no company
+        if (selComp1 != null && selComp2 != null) {
+          //SHOW GRAPH FOR 2(selComp1, selComp2)
+          print("Selected 2 companies:\n\t$selComp1\n\t$selComp2\n");
         } else {
-          if (selComp1 != null && selComp2 != null) {
-            //SHOW GRAPH FOR 2(selComp1, selComp2)
-            print("Selected 2 companies:\n$selComp1\n$selComp2\n");
+          if (selComp1 != null) {
+            print("Selected 1 company [1]:\n\t$selComp1\n");
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (BuildContext context) =>
+                GraphOne(company: selComp1),
+                fullscreenDialog: true,
+              ),
+            );
           } else {
-            if (selComp1 != null) {
-              print("Selected 1 company [1]:\n$selComp1\n");
-              //showGraphFor1(selComp1);
-            } else {
-              print("Selected 1 company [2]:\n$selComp2\n");
-              //showGraphFor1(selComp2);
-            }
+            print("Selected 1 company [2]:\n\t$selComp2\n");
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (BuildContext context) =>
+                  GraphOne(company: selComp2),
+                fullscreenDialog: true,
+              ),
+            );
           }
         }
+
       },
       backgroundColor: getButtonColor(),
       tooltip: 'Increment Counter',

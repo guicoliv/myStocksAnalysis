@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mystockanalysis/SharedPreferencesManager.dart';
 import 'package:mystockanalysis/models/Company.dart';
+import 'package:mystockanalysis/pages/GraphOne.dart';
 import 'package:mystockanalysis/pages/SelectFavorite.dart';
 
 import 'pages/HomePage.dart';
@@ -15,6 +16,7 @@ class App extends StatelessWidget {
     return MaterialApp(title: 'An App', home: LoadingHomePage(), routes: {
       '/home': (context) => HomePage(),
       '/favorites': (context) => SelectFavorite(),
+      '/graphOne': (context) => GraphOne(),
     });
   }
 }
@@ -34,7 +36,7 @@ class _LoadingHomePageState extends State<LoadingHomePage> {
 
   loadPage() {
     List companyList;
-    SharedPreferencesManager.clean();
+    //SharedPreferencesManager.clean();
     SharedPreferencesManager.read("Companies").then((result){
       if(result == null) {
         print("Creating starting companies");

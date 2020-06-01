@@ -121,23 +121,3 @@ class AddCompanyState extends State<AddCompany> {
   }
 
 }
-
-abstract class CompanyListItem {
-  /// The title line to show in a list item.
-  Widget buildTitle(BuildContext context);
-
-  /// The subtitle line, if any, to show in a list item.
-  Widget buildSubtitle(BuildContext context);
-}
-
-/// A ListItem that contains data to display a message.
-class MessageItem implements CompanyListItem {
-  final String name;
-  final String symbol;
-
-  MessageItem(this.name, this.symbol);
-
-  Widget buildTitle(BuildContext context) => Text(name);
-
-  Widget buildSubtitle(BuildContext context) => Text(symbol);
-}
