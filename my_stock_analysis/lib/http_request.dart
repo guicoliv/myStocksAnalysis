@@ -31,7 +31,7 @@ Future<List<QuoteDetail>> getQuotes(List symbols) async{
       return null;
     }
 
-    print(jsonDecode(response.body));
+    //print(jsonDecode(response.body));
 
     if (response.headers.containsKey('content-type')) {
       if (response.headers['content-type'].contains("application/json")) {
@@ -54,6 +54,7 @@ Future<List<QuoteDetail>> getQuotes(List symbols) async{
               null,
               item['flag'] ?? "",
               item['volume'].toDouble() ?? null,
+              false
           );
           finalList.add(quoteDetail);
         }

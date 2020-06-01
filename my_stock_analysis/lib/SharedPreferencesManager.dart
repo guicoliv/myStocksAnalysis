@@ -14,6 +14,7 @@ class SharedPreferencesManager{
   static save(String key, value) async  {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    print("saving: $value}");
     prefs.setString(key, json.encode(value));
   }
 

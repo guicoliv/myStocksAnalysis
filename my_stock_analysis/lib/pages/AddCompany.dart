@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mystockanalysis/SharedPreferencesManager.dart';
 import 'package:mystockanalysis/http_request.dart';
-import 'package:mystockanalysis/models/Company.dart';
+import 'package:mystockanalysis/models/QuoteDetail.dart';
 
 
 
 
 class AddCompany extends StatefulWidget {
-  final List<Company> companies;
+  final List<QuoteDetail> companies;
   AddCompany({Key key, this.companies}) : super(key: key);
 
   @override
@@ -59,26 +60,6 @@ class AddCompanyState extends State<AddCompany> {
                       children: <Widget>[
                         new Container(
                           margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                          child: new Text('Name: ', style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),),
-                        ),
-                        new Flexible(
-                          child: new TextField(
-                              style: TextStyle(fontSize: 24.0),
-                              controller: nameController,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(10),
-
-                              )
-                          ),
-                        ),
-                      ],
-                    ),
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        new Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                           child: new Text('Symbol: ', style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),),
                         ),
                         new Flexible(
@@ -106,8 +87,14 @@ class AddCompanyState extends State<AddCompany> {
               if(value == null)
                 print("erro");
               else{
-                widget.companies.add(new Company(id:widget.companies.length, symbol:value[0].symbol, name:value[0].name, favorite: false));
-                
+                for(QuoteDetail c in widget.companies){
+                  if(c.symbol == value[0].symbol)
+                    return;
+                }
+                widget.companies.add(value[0]);
+
+                SharedPreferencesManager.save(
+                    "Companies", QuoteDetail.encodeListToJson(widget.companies));
                 
                 Navigator.pop(context, true);
                 

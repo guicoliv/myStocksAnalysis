@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mystockanalysis/SharedPreferencesManager.dart';
-import 'package:mystockanalysis/models/Company.dart';
+import 'package:mystockanalysis/models/QuoteDetail.dart';
 import 'package:mystockanalysis/pages/GraphOne.dart';
 
 class LoadingPageGraph extends StatefulWidget {
-  final Company company;
+  final QuoteDetail company;
   LoadingPageGraph({Key key, this.company}) : super(key: key);
 
   LoadingPageGraphState createState() => LoadingPageGraphState();

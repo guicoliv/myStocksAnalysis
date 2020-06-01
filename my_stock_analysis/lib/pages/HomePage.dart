@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mystockanalysis/SharedPreferencesManager.dart';
-import 'package:mystockanalysis/models/Company.dart';
+import 'package:mystockanalysis/models/QuoteDetail.dart';
 import 'package:mystockanalysis/pages/GraphOne.dart';
 import 'package:mystockanalysis/pages/SelectFavorite.dart';
 
 bool selected = false;
-Company selComp1, selComp2;
+QuoteDetail selComp1, selComp2;
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -15,14 +15,14 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<Company> companies;
+  List<QuoteDetail> companies;
   bool pressed = false;
 
   @override
   Widget build(BuildContext context) {
     print("Building home page!");
     if (this.companies == null) {
-      List<Company> args = ModalRoute.of(context).settings.arguments;
+      List<QuoteDetail> args = ModalRoute.of(context).settings.arguments;
       this.companies = args;
 
       print("Companies on HomePage: $companies");
@@ -46,7 +46,7 @@ class HomePageState extends State<HomePage> {
                   ),
                 );
                 SharedPreferencesManager.save(
-                    "Companies", Company.encodeListToJson(companies));
+                    "Companies", QuoteDetail.encodeListToJson(companies));
                 if (selComp1 != null) if (!selComp1.favorite) selComp1 = null;
                 if (selComp2 != null) if (!selComp2.favorite) selComp2 = null;
                 setState(() {});
@@ -58,14 +58,14 @@ class HomePageState extends State<HomePage> {
           Container(
               padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
-              color: Colors.white,
+              color: Colors.black,
               child: SafeArea(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text("Companies",
                           style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 36,
                               fontWeight: FontWeight.bold)),
                     ]),
@@ -80,7 +80,7 @@ class HomePageState extends State<HomePage> {
                     children: <Widget>[
                       Text(countSelectedCompanies(),
                           style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 36,
                               fontWeight: FontWeight.bold)),
                     ]),
@@ -109,26 +109,21 @@ class HomePageState extends State<HomePage> {
           //SHOW GRAPH FOR 2(selComp1, selComp2)
           print("Selected 2 companies:\n\t$selComp1\n\t$selComp2\n");
         } else {
-          if (selComp1 != null) {
-            print("Selected 1 company [1]:\n\t$selComp1\n");
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) =>
-                GraphOne(company: selComp1),
-                fullscreenDialog: true,
-              ),
-            );
-          } else {
+          QuoteDetail temp;
+          if(selComp2 != null){
+            temp = selComp2;
             print("Selected 1 company [2]:\n\t$selComp2\n");
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) =>
-                  GraphOne(company: selComp2),
-                fullscreenDialog: true,
-              ),
-            );
+          }else{
+            temp = selComp1;
+            print("Selected 1 company [1]:\n\t$selComp1\n");
           }
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) =>
+                GraphOne(company: temp),
+              fullscreenDialog: true,
+            ),
+          );
         }
 
       },
@@ -145,12 +140,12 @@ class HomePageState extends State<HomePage> {
       return Colors.transparent;
   }
 
-  Widget _buildList(List<Company> companies) {
+  Widget _buildList(List<QuoteDetail> companies) {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
         itemCount: companies.length,
         itemBuilder: (context, index) {
-          Company item = companies[index];
+          QuoteDetail item = companies[index];
           return CustomTile(item, this);
         });
   }
@@ -164,7 +159,7 @@ Widget _confirmButton() {
 }
 
 class CustomTile extends StatefulWidget {
-  final Company company;
+  final QuoteDetail company;
   final HomePageState parent;
   CustomTile(this.company, this.parent);
 
@@ -190,7 +185,12 @@ class CustomTileState extends State<CustomTile> {
     }
 
     return new Container(
-      color: color,
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: color,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(20))
+      ),
       margin: EdgeInsets.symmetric(vertical: 3),
       padding: EdgeInsets.only(top: 8),
       child: ListTile(
@@ -200,9 +200,9 @@ class CustomTileState extends State<CustomTile> {
         onTap: () {
           setState(() {
             if (color == Colors.cyanAccent) {
-              if (selComp2 != null) if (widget.company.id == selComp2.id)
+              if (selComp2 != null) if (widget.company.symbol == selComp2.symbol)
                 selComp2 = null;
-              if (selComp1 != null) if (widget.company.id == selComp1.id)
+              if (selComp1 != null) if (widget.company.symbol == selComp1.symbol)
                 selComp1 = null;
               color = Colors.indigo;
             } else if (selComp1 != null && selComp2 != null) {

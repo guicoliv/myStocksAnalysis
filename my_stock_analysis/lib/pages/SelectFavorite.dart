@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mystockanalysis/models/Company.dart';
+import 'package:mystockanalysis/models/QuoteDetail.dart';
 import 'package:mystockanalysis/pages/AddCompany.dart';
 
 
 
 
 class SelectFavorite extends StatefulWidget {
-  final List<Company> companies;
+  final List<QuoteDetail> companies;
   SelectFavorite({Key key, this.companies}) : super(key: key);
 
   @override
@@ -26,7 +26,7 @@ class SelectFavoriteState extends State<SelectFavorite> {
           return _buildRow(item);
         });
   }
-  Widget _buildRow(Company item) {
+  Widget _buildRow(QuoteDetail item) {
     return ListTile(
       title: item.buildTitle(context),
       subtitle: item.buildSubtitle(context),
@@ -114,7 +114,7 @@ class SelectFavoriteState extends State<SelectFavorite> {
 
   int countFavoritedCompanies(){
     int count = 0;
-    for(Company c in widget.companies){
+    for(QuoteDetail c in widget.companies){
       if(c.favorite)
         count++;
     }

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mystockanalysis/models/Company.dart';
+import 'package:mystockanalysis/models/QuoteDetail.dart';
 
 class CustomTile extends StatefulWidget {
-  final Company company;
+  final QuoteDetail company;
   CustomTile(this.company);
 
   @override

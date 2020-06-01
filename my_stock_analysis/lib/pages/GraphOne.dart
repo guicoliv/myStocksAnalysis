@@ -2,12 +2,12 @@ import 'package:candleline/bloc/kline_bloc.dart';
 import 'package:candleline/candleline.dart';
 import 'package:flutter/material.dart';
 import 'package:mystockanalysis/http_request.dart';
-import 'package:mystockanalysis/models/Company.dart';
+import 'package:mystockanalysis/models/QuoteDetail.dart';
 
 int number = 0;
 
 class GraphOne extends StatefulWidget {
-  final Company company;
+  final QuoteDetail company;
   GraphOne({Key key, this.company}) : super(key: key);
 
   @override
