@@ -18,6 +18,7 @@ class AddCompany extends StatefulWidget {
 class AddCompanyState extends State<AddCompany> {
   final nameController = TextEditingController();
   final symbolController = TextEditingController();
+  bool _error = false, _repeated = false;
 
 
 
@@ -67,6 +68,8 @@ class AddCompanyState extends State<AddCompany> {
                               style: TextStyle(fontSize: 24.0),
                               controller: symbolController,
                               decoration: InputDecoration(
+                                errorText: _error ? 'Wrong Symbol' : _repeated ? 'Already Exists' : null,
+                                errorStyle: TextStyle(fontSize: 16),
                                 contentPadding: EdgeInsets.all(10),
 
                               )
@@ -85,12 +88,20 @@ class AddCompanyState extends State<AddCompany> {
           onPressed: ()  {
             getQuotes([symbolController.text]).then((value) {
               if(value == null)
-                print("erro");
+                setState(() {
+                  _error = true;
+                });
               else{
                 for(QuoteDetail c in widget.companies){
-                  if(c.symbol == value[0].symbol)
+                  if(c.symbol == value[0].symbol) {
+                    setState(() {
+                      _repeated = true;
+                    });
                     return;
+                  }
                 }
+                _error = false;
+                _repeated = false;
                 widget.companies.add(value[0]);
 
                 SharedPreferencesManager.save(
