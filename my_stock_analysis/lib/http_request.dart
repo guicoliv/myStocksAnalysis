@@ -6,7 +6,7 @@ import 'models/QuoteDetail.dart';
 String baseUrl = "https://marketdata.websol.barchart.com/";
 
 String getApiKey(){
-  return '133c0a27b0b00a4613da04c6cf71abd7';
+  return '9bab642e81b8eea69ec393847d8e3d20';
 }
 
 Future<List<QuoteDetail>> getQuotes(List symbols) async{
@@ -71,8 +71,9 @@ Future<List<QuoteDetail>> getQuotes(List symbols) async{
 }
 
 
-Future<List<KlineData>> getHistory(String symbol, String type) async{
-  String url = baseUrl + "getHistory.json?apikey=" + getApiKey() + "&symbol=" + symbol + "&type=" + type + '&startDate=20200106';
+Future<List<KlineData>> getHistory(String symbol, String type, String startDate) async{
+  String url = baseUrl + "getHistory.json?apikey=" + getApiKey() + "&symbol=" + symbol + "&type=" + type + '&startDate='+startDate;
+  print(url);
 
   try{
     var response = await http.get(url).timeout(Duration(seconds: 10), onTimeout: (){

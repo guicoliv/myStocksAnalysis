@@ -19,7 +19,7 @@ class SelectFavoriteState extends State<SelectFavorite> {
   Widget _buildCompaniesList() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        itemCount: widget.companies.length,
+        itemCount: widget.companies.length*2,
         itemBuilder: (context, i) {
           if (i.isOdd) return Divider(
             color: Colors.grey,
@@ -57,6 +57,7 @@ class SelectFavoriteState extends State<SelectFavorite> {
   @override
   Widget build(BuildContext context) {
     print("Building SelectFavorite page");
+    print("Companies on Select Favorite: ${widget.companies}");
 
 
     return Scaffold(

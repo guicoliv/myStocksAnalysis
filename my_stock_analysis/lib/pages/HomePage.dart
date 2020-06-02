@@ -5,6 +5,7 @@ import 'package:mystockanalysis/models/QuoteDetail.dart';
 import 'package:mystockanalysis/pages/GraphOne.dart';
 import 'package:mystockanalysis/pages/GraphTwo.dart';
 import 'package:mystockanalysis/pages/SelectFavorite.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 bool selected = false;
 QuoteDetail selComp1, selComp2;
@@ -19,29 +20,32 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   List<QuoteDetail> companies;
   bool pressed = false;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+  int metricChoice = 1;
 
   Future<Null> _refresh() {
     var symbols = [];
-    for(QuoteDetail qd in companies){
+    for (QuoteDetail qd in companies) {
       symbols.add(qd.symbol);
     }
-    print ("symbols: $symbols");
+    print("symbols: $symbols");
 
     var favSymbols = [];
-    for(QuoteDetail qd in companies){
-      if(qd.favorite)favSymbols.add(qd.symbol);
+    for (QuoteDetail qd in companies) {
+      if (qd.favorite) favSymbols.add(qd.symbol);
     }
 
     return getQuotes(symbols).then((value) {
       setState(() {
         companies = value;
 
-        for(QuoteDetail qd in companies){
-          if(favSymbols.indexOf(qd.symbol) != -1){
+        for (QuoteDetail qd in companies) {
+          if (favSymbols.indexOf(qd.symbol) != -1) {
             qd.favorite = true;
           }
         }
+        SharedPreferencesManager.save("Companies", companies);
       });
     });
   }
@@ -119,6 +123,75 @@ class HomePageState extends State<HomePage> {
                   key: _refreshIndicatorKey,
                   onRefresh: _refresh,
                   child: _buildList(companies))),
+          Container(
+              alignment: Alignment.bottomLeft,
+              width: MediaQuery.of(context).size.width * 0.80,
+              margin: EdgeInsets.only(left:35, right: 40),
+              child: Row(
+                children: <Widget>[
+                  ButtonTheme(
+                    padding: EdgeInsets.all(2),
+                    minWidth: MediaQuery.of(context).size.width * 0.16,
+                    child: FlatButton(
+                      textColor: Colors.white,
+                      color: getMetricChoiceButtonColor(1),
+                      child: Text("Day"),
+                      onPressed: () {
+                        setState(() {
+                          metricChoice = 1;
+                        });},
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ButtonTheme(
+                    padding: EdgeInsets.all(2),
+                    minWidth: MediaQuery.of(context).size.width * 0.16,
+                    child: FlatButton(
+                      textColor: Colors.white,
+                      color: getMetricChoiceButtonColor(2),
+                      child: Text("Week"),
+                      onPressed: () {
+                        setState(() {
+                          metricChoice = 2;
+                        });},
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ButtonTheme(
+                    padding: EdgeInsets.all(2),
+                    minWidth: MediaQuery.of(context).size.width * 0.16,
+                    child: FlatButton(
+                      textColor: Colors.white,
+                      color: getMetricChoiceButtonColor(3),
+                      child: Text("Month"),
+                      onPressed: () {
+                        setState(() {
+                          metricChoice = 3;
+                        });},
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ButtonTheme(
+                    padding: EdgeInsets.all(2),
+                    minWidth: MediaQuery.of(context).size.width * 0.16,
+                    child: FlatButton(
+                      textColor: Colors.white,
+                      color: getMetricChoiceButtonColor(4),
+                      child: Text("Year"),
+                      onPressed: () {
+                        setState(() {
+                        metricChoice = 4;
+                      });},
+                    ),
+                  ),
+                ],
+              ))
         ]),
         floatingActionButton: _getFloatingButton());
   }
@@ -129,6 +202,13 @@ class HomePageState extends State<HomePage> {
     if (selComp1 != null) count++;
 
     return "$count/2";
+  }
+
+  Color getMetricChoiceButtonColor(int button){
+      if(button == metricChoice)
+        return Colors.cyanAccent;
+
+      return Colors.indigo;
   }
 
   Widget _getFloatingButton() {
@@ -147,7 +227,7 @@ class HomePageState extends State<HomePage> {
             context,
             MaterialPageRoute(
               builder: (BuildContext context) =>
-                  GraphTwo(companies: selectedCompanies),
+                  GraphTwo(companies: selectedCompanies, metricChoice: metricChoice,),
               fullscreenDialog: true,
             ),
           );
@@ -163,7 +243,7 @@ class HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => GraphOne(company: temp),
+              builder: (BuildContext context) => GraphOne(company: temp, metricChoice: metricChoice,),
               fullscreenDialog: true,
             ),
           );
@@ -245,8 +325,12 @@ class CustomTileState extends State<CustomTile> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(widget.company.lastPrice.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                  selectText(),
+              Text(widget.company.lastPrice.toString(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20)),
+              selectText(),
             ])),
         onTap: () {
           setState(() {
@@ -278,15 +362,20 @@ class CustomTileState extends State<CustomTile> {
     );
   }
 
-  Widget selectText(){
-
+  Widget selectText() {
     double change = widget.company.lastPrice - widget.company.open;
+    //print(" ${widget.company.symbol} last price: ${widget.company.lastPrice}");
+    //print(" ${widget.company.symbol} open: ${widget.company.open}");
+    //print("change: $change");
 
-    if(change < 0)
-      return Text("${change.toStringAsFixed(3)}", style: TextStyle(color: Colors.red, fontSize: 16));
-    else if(change > 0)
-      return Text("+${change.toStringAsFixed(3)}", style: TextStyle(color: Colors.green, fontSize: 16));
+    if (change < 0)
+      return Text("${change.toStringAsFixed(3)}",
+          style: TextStyle(color: Colors.red, fontSize: 16));
+    else if (change > 0)
+      return Text("+${change.toStringAsFixed(3)}",
+          style: TextStyle(color: Colors.green, fontSize: 16));
     else
-      return Text("${change.toStringAsFixed(3)}", style: TextStyle(color: Colors.white, fontSize: 16));
+      return Text("-",
+          style: TextStyle(color: Colors.white, fontSize: 16));
   }
 }

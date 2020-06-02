@@ -3,13 +3,15 @@ import 'package:mystockanalysis/models/QuoteDetail.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mystockanalysis/http_request.dart';
 import 'package:candleline/candleline.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 int number = 0;
 
 class GraphTwo extends StatefulWidget {
   final List<QuoteDetail> companies;
+  final int metricChoice;
 
-  GraphTwo({Key key, this.companies}) : super(key: key);
+  GraphTwo({Key key, this.companies, this.metricChoice}) : super(key: key);
 
   @override
   GraphTwoState createState() => GraphTwoState();
@@ -116,15 +118,53 @@ class GraphTwoState extends State<GraphTwo> {
   }
 
   void getGraphData(List<QuoteDetail> k) {
+
+    String metric, startDate;
+    DateTime today = new DateTime.now();
+    var formatter = new DateFormat('yyyyMMdd');
+    DateTime dateTimeToFormat;
+
+    print('metric choice: '+widget.metricChoice.toString());
+    switch(widget.metricChoice){
+      case 1:
+        metric= 'minutes';
+        dateTimeToFormat = today.subtract(new Duration(days: 7));
+        String formattedDate = formatter.format(dateTimeToFormat);
+        startDate= formattedDate;
+        print(startDate);
+        break;
+      case 2:
+        metric = 'minutes';
+        dateTimeToFormat = today.subtract(new Duration(days: 28));
+        String formattedDate = formatter.format(dateTimeToFormat);
+        startDate= formattedDate;
+        print(startDate);
+        break;
+      case 3:
+        metric = 'daily';
+        dateTimeToFormat = today.subtract(new Duration(days: 90));
+        String formattedDate = formatter.format(dateTimeToFormat);
+        startDate= formattedDate;
+        print(startDate);
+        break;
+      case 4:
+        metric = 'daily';
+        dateTimeToFormat = today.subtract(new Duration(days: 730));
+        String formattedDate = formatter.format(dateTimeToFormat);
+        startDate= formattedDate;
+        print(startDate);
+        break;
+    }
+
     Future<List<KlineData>> companyOneResponse =
-        getHistory(widget.companies[0].symbol, 'daily');
+        getHistory(widget.companies[0].symbol, metric, startDate);
 
     //COMPANY ONE
     companyOneResponse.then((valueOne) {
       formatFetchedData(valueOne, 1);
 
       Future<List<KlineData>> companyTwoResponse =
-          getHistory(widget.companies[1].symbol, 'daily');
+          getHistory(widget.companies[1].symbol, metric, startDate);
 
       //COMPANY TWO
       companyTwoResponse.then((valueTwo) {
