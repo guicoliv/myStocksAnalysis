@@ -33,7 +33,6 @@ class CustomTileState extends State<CustomTile> {
         child: ListTile(
           title: widget.company.buildTitle(context),
           subtitle: widget.company.buildSubtitle(context),
-          focusColor: Colors.cyanAccent,
           onTap: () {
             setState(() {
               if(color == Colors.cyanAccent)

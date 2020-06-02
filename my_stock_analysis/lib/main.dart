@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mystockanalysis/SharedPreferencesManager.dart';
 import 'package:mystockanalysis/models/QuoteDetail.dart';
 import 'package:mystockanalysis/pages/GraphOne.dart';
+import 'package:mystockanalysis/pages/GraphTwo.dart';
 import 'package:mystockanalysis/pages/SelectFavorite.dart';
 
 import 'pages/HomePage.dart';
@@ -22,6 +23,7 @@ class App extends StatelessWidget {
           '/home': (context) => HomePage(),
           '/favorites': (context) => SelectFavorite(),
           '/graphOne': (context) => GraphOne(),
+          '/graphTwo': (context) => GraphTwo(),
         });
   }
 }

@@ -39,6 +39,7 @@ class GraphOneState extends State<GraphOne> {
             title: Text('Graph View'),
           ),
           body: Container(
+              color: Colors.black,
               child: Center(
             child: CircularProgressIndicator(),
           )));

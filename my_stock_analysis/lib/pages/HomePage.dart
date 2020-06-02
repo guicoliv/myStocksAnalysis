@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mystockanalysis/SharedPreferencesManager.dart';
 import 'package:mystockanalysis/models/QuoteDetail.dart';
 import 'package:mystockanalysis/pages/GraphOne.dart';
+import 'package:mystockanalysis/pages/GraphTwo.dart';
 import 'package:mystockanalysis/pages/SelectFavorite.dart';
 
 bool selected = false;
@@ -108,6 +109,18 @@ class HomePageState extends State<HomePage> {
         if (selComp1 != null && selComp2 != null) {
           //SHOW GRAPH FOR 2(selComp1, selComp2)
           print("Selected 2 companies:\n\t$selComp1\n\t$selComp2\n");
+          List<QuoteDetail> selectedCompanies = new List<QuoteDetail>();
+          selectedCompanies.add(selComp1);
+          selectedCompanies.add(selComp2);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) =>
+                GraphTwo(companies: selectedCompanies),
+              fullscreenDialog: true,
+            ),
+          );
+
         } else {
           QuoteDetail temp;
           if(selComp2 != null){
@@ -196,7 +209,6 @@ class CustomTileState extends State<CustomTile> {
       child: ListTile(
         title: widget.company.buildTitle(context),
         subtitle: widget.company.buildSubtitle(context),
-        focusColor: Colors.cyanAccent,
         onTap: () {
           setState(() {
             if (color == Colors.cyanAccent) {

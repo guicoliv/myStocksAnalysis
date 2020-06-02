@@ -25,8 +25,8 @@ class LoadingPageGraphState extends State<LoadingPageGraph> {
       bloc = KlinePageBloc();
     }
     print("AI JOCA");
-      //Navigator.of(context).pushNamed('/home');
-      Navigator.pushNamed(context, '/graphOne', arguments: widget.company);
+    //Navigator.of(context).pushNamed('/home');
+    Navigator.pushNamed(context, '/graphOne', arguments: widget.company);
   }
 
 
