@@ -171,7 +171,7 @@ class AddCompanyState extends State<AddCompany> {
                           ),
                           Container(
                             margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 15),
+                                horizontal: 10, vertical: 15),
                             child: Text(
                               (tempCompany != null)
                                   ? tempCompany.open.toStringAsFixed(2)
@@ -195,7 +195,7 @@ class AddCompanyState extends State<AddCompany> {
                           ),
                           Container(
                             margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 15),
+                                horizontal: 10, vertical: 15),
                             child: Text(
                               (tempCompany != null)
                                   ? tempCompany.lastPrice.toStringAsFixed(2)
@@ -227,7 +227,7 @@ class AddCompanyState extends State<AddCompany> {
                           ),
                           Container(
                             margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 15),
+                                horizontal: 10, vertical: 15),
                             child: Text(
                               (tempCompany != null)
                                   ? tempCompany.high.toStringAsFixed(2)
@@ -253,7 +253,7 @@ class AddCompanyState extends State<AddCompany> {
                           ),
                           Container(
                             margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 15),
+                                horizontal: 10, vertical: 15),
                             child: Text(
                               (tempCompany != null)
                                   ? tempCompany.low.toStringAsFixed(2)

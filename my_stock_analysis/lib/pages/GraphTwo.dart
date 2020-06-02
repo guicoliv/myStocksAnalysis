@@ -21,6 +21,7 @@ class GraphTwoState extends State<GraphTwo> {
   List<CompaniesComparison> companyOneData = new List();
   List<CompaniesComparison> companyTwoData = new List();
   bool companiesDataFetched = false;
+  int linesToShow = 0;
 
   @override
   void initState() {
@@ -69,7 +70,7 @@ class GraphTwoState extends State<GraphTwo> {
                         textColor: Colors.white,
                         color: Colors.cyan,
                         child: Text(widget.companies[0].symbol),
-                        onPressed: (){},
+                        onPressed: _companyOnePressed,
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 10),
@@ -77,7 +78,7 @@ class GraphTwoState extends State<GraphTwo> {
                           textColor: Colors.white,
                           color: Colors.indigo,
                           child: Text(widget.companies[1].symbol),
-                          onPressed: (){},
+                          onPressed: _companyTwoPressed,
                         ),
                       )
                     ],
@@ -87,9 +88,29 @@ class GraphTwoState extends State<GraphTwo> {
     }
   }
 
+  void _companyOnePressed() {
+    setState(() {
+      if(this.linesToShow == 1){
+        this.linesToShow = 0;
+      }else{
+        this.linesToShow = 1;
+      }
+    });
+  }
+
+  void _companyTwoPressed() {
+    setState(() {
+      if(this.linesToShow == 2){
+        this.linesToShow = 0;
+      }else{
+        this.linesToShow = 2;
+      }
+    });
+  }
+
   Widget createChart() {
     List<charts.Series<CompaniesComparison, DateTime>> dataList =
-        _formatDataToGraph(companyOneData, companyTwoData);
+        _formatDataToGraph(companyOneData, companyTwoData, linesToShow);
 
     return new charts.TimeSeriesChart(dataList,
         defaultRenderer:
@@ -98,60 +119,81 @@ class GraphTwoState extends State<GraphTwo> {
   }
 
   static List<charts.Series<CompaniesComparison, DateTime>> _formatDataToGraph(
-      companyOneData, companyTwoData) {
-    return [
-      new charts.Series<CompaniesComparison, DateTime>(
-        id: 'CompanyOne',
-        colorFn: (_, __) => charts.MaterialPalette.cyan.shadeDefault,
-        domainFn: (CompaniesComparison value, _) => value.marketDay,
-        measureFn: (CompaniesComparison value, _) => value.highQuoteValue,
-        data: companyOneData,
-      ),
-      new charts.Series<CompaniesComparison, DateTime>(
-        id: 'CompanyTwo',
-        colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
-        domainFn: (CompaniesComparison value, _) => value.marketDay,
-        measureFn: (CompaniesComparison value, _) => value.highQuoteValue,
-        data: companyTwoData,
-      ),
-    ];
+      companyOneData, companyTwoData, l) {
+    if (l == 0) {
+      return [
+        new charts.Series<CompaniesComparison, DateTime>(
+          id: 'CompanyOne',
+          colorFn: (_, __) => charts.MaterialPalette.cyan.shadeDefault,
+          domainFn: (CompaniesComparison value, _) => value.marketDay,
+          measureFn: (CompaniesComparison value, _) => value.highQuoteValue,
+          data: companyOneData,
+        ),
+        new charts.Series<CompaniesComparison, DateTime>(
+          id: 'CompanyTwo',
+          colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
+          domainFn: (CompaniesComparison value, _) => value.marketDay,
+          measureFn: (CompaniesComparison value, _) => value.highQuoteValue,
+          data: companyTwoData,
+        ),
+      ];
+    } else if (l == 1) {
+      return [
+        new charts.Series<CompaniesComparison, DateTime>(
+          id: 'CompanyOne',
+          colorFn: (_, __) => charts.MaterialPalette.cyan.shadeDefault,
+          domainFn: (CompaniesComparison value, _) => value.marketDay,
+          measureFn: (CompaniesComparison value, _) => value.highQuoteValue,
+          data: companyOneData,
+        ),
+      ];
+    } else {
+      return [
+        new charts.Series<CompaniesComparison, DateTime>(
+          id: 'CompanyTwo',
+          colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
+          domainFn: (CompaniesComparison value, _) => value.marketDay,
+          measureFn: (CompaniesComparison value, _) => value.highQuoteValue,
+          data: companyTwoData,
+        ),
+      ];
+    }
   }
 
   void getGraphData(List<QuoteDetail> k) {
-
     String metric, startDate;
     DateTime today = new DateTime.now();
     var formatter = new DateFormat('yyyyMMdd');
     DateTime dateTimeToFormat;
 
-    print('metric choice: '+widget.metricChoice.toString());
-    switch(widget.metricChoice){
+    print('metric choice: ' + widget.metricChoice.toString());
+    switch (widget.metricChoice) {
       case 1:
-        metric= 'minutes';
+        metric = 'minutes';
         dateTimeToFormat = today.subtract(new Duration(days: 7));
         String formattedDate = formatter.format(dateTimeToFormat);
-        startDate= formattedDate;
+        startDate = formattedDate;
         print(startDate);
         break;
       case 2:
         metric = 'minutes';
         dateTimeToFormat = today.subtract(new Duration(days: 28));
         String formattedDate = formatter.format(dateTimeToFormat);
-        startDate= formattedDate;
+        startDate = formattedDate;
         print(startDate);
         break;
       case 3:
         metric = 'daily';
         dateTimeToFormat = today.subtract(new Duration(days: 90));
         String formattedDate = formatter.format(dateTimeToFormat);
-        startDate= formattedDate;
+        startDate = formattedDate;
         print(startDate);
         break;
       case 4:
         metric = 'daily';
         dateTimeToFormat = today.subtract(new Duration(days: 730));
         String formattedDate = formatter.format(dateTimeToFormat);
-        startDate= formattedDate;
+        startDate = formattedDate;
         print(startDate);
         break;
     }
