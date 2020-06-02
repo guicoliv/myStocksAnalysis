@@ -256,7 +256,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
-  xml:
+  xml:gi
     dependency: transitive
     description:
       name: xml
