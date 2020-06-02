@@ -63,27 +63,6 @@ class SelectFavoriteState extends State<SelectFavorite> {
         },
       )
     );
-    /*return ListTile(
-      title: item.buildTitle(context),
-      subtitle: item.buildSubtitle(context),
-
-      trailing: Icon(
-        item.favorite ? Icons.check_circle : Icons.check_circle_outline,
-
-        color: item.favorite ? Colors.cyanAccent : !item.favorite
-            ? Colors.grey
-            : null,
-      ),
-      onTap: () {
-        setState(() {
-          if (!item.favorite && countFavoritedCompanies() < 10) {
-            item.favorite = true;
-          } else {
-            item.favorite = false;
-          }
-        });
-      },
-    );*/
   }
 
   @override
