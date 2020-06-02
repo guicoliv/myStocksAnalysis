@@ -102,7 +102,6 @@ class QuoteDetail {
       "INTC",
       "AMD",
       "MSFT",
-      "IBM",
       "ORCL",
       "FB",
       "HPQ",
@@ -152,7 +151,7 @@ class QuoteDetail {
   Widget buildTitle(BuildContext context) => Text(
         name,
         style: TextStyle(
-            fontSize: 28.0, fontWeight: FontWeight.bold, color: Colors.grey),
+            fontSize: 26.0, fontWeight: FontWeight.bold, color: Colors.grey),
       );
 
   Widget buildSubtitle(BuildContext context) => Text(

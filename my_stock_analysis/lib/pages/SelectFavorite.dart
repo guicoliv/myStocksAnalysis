@@ -20,7 +20,12 @@ class SelectFavoriteState extends State<SelectFavorite> {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
         itemCount: widget.companies.length,
-        itemBuilder: (context, index) {
+        itemBuilder: (context, i) {
+          if (i.isOdd) return Divider(
+            color: Colors.grey,
+          );
+
+          final index = i ~/ 2;
           final item = widget.companies[index];
 
           return _buildRow(item);
@@ -33,7 +38,8 @@ class SelectFavoriteState extends State<SelectFavorite> {
 
       trailing: Icon(
         item.favorite ? Icons.check_circle : Icons.check_circle_outline,
-        color: item.favorite ? Colors.cyanAccent : null,
+
+        color: item.favorite ? Colors.cyanAccent : !item.favorite ? Colors.grey : null,
       ),
       onTap: () {
         setState(() {
@@ -62,14 +68,14 @@ class SelectFavoriteState extends State<SelectFavorite> {
         Container(
             padding: EdgeInsets.all(10),
             width: MediaQuery.of(context).size.width,
-            color: Colors.white,
+            color: Colors.black,
             child: SafeArea(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text("Companies",
                         style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontSize: 36,
                             fontWeight: FontWeight.bold)),
                   ]),
@@ -84,7 +90,7 @@ class SelectFavoriteState extends State<SelectFavorite> {
                   children: <Widget>[
                     Text("${countFavoritedCompanies()}/10",
                         style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontSize: 36,
                             fontWeight: FontWeight.bold)),
                   ]),

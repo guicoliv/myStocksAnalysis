@@ -89,12 +89,14 @@ class AddCompanyState extends State<AddCompany> {
             getQuotes([symbolController.text]).then((value) {
               if(value == null)
                 setState(() {
+                  _repeated = false;
                   _error = true;
                 });
               else{
                 for(QuoteDetail c in widget.companies){
                   if(c.symbol == value[0].symbol) {
                     setState(() {
+                      _error = false;
                       _repeated = true;
                     });
                     return;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mystockanalysis/SharedPreferencesManager.dart';
+import 'package:mystockanalysis/http_request.dart';
 import 'package:mystockanalysis/models/QuoteDetail.dart';
 import 'package:mystockanalysis/pages/GraphOne.dart';
 import 'package:mystockanalysis/pages/GraphTwo.dart';
@@ -18,6 +19,32 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   List<QuoteDetail> companies;
   bool pressed = false;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> _refresh() {
+    var symbols = [];
+    for(QuoteDetail qd in companies){
+      symbols.add(qd.symbol);
+    }
+    print ("symbols: $symbols");
+
+    var favSymbols = [];
+    for(QuoteDetail qd in companies){
+      if(qd.favorite)favSymbols.add(qd.symbol);
+    }
+
+    return getQuotes(symbols).then((value) {
+      setState(() {
+        companies = value;
+
+        for(QuoteDetail qd in companies){
+          if(favSymbols.indexOf(qd.symbol) != -1){
+            qd.favorite = true;
+          }
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +115,10 @@ class HomePageState extends State<HomePage> {
               )),
           Container(
               margin: EdgeInsets.symmetric(horizontal: 0, vertical: 50),
-              child: _buildList(companies)),
+              child: RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  onRefresh: _refresh,
+                  child: _buildList(companies))),
         ]),
         floatingActionButton: _getFloatingButton());
   }
@@ -115,30 +145,29 @@ class HomePageState extends State<HomePage> {
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (BuildContext context) =>
-                GraphTwo(companies: selectedCompanies),
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  GraphTwo(companies: selectedCompanies),
               fullscreenDialog: true,
             ),
           );
-
         } else {
           QuoteDetail temp;
-          if(selComp2 != null){
+          if (selComp2 != null) {
             temp = selComp2;
             print("Selected 1 company [2]:\n\t$selComp2\n");
-          }else{
+          } else {
             temp = selComp1;
             print("Selected 1 company [1]:\n\t$selComp1\n");
           }
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (BuildContext context) =>
-                GraphOne(company: temp),
+            MaterialPageRoute(
+              builder: (BuildContext context) => GraphOne(company: temp),
               fullscreenDialog: true,
             ),
           );
         }
-
       },
       backgroundColor: getButtonColor(),
       tooltip: 'Increment Counter',
@@ -182,41 +211,52 @@ class CustomTile extends StatefulWidget {
 
 class CustomTileState extends State<CustomTile> {
   Color color;
+  double width;
 
   @override
   void initState() {
     super.initState();
 
     color = Colors.indigo;
+    width = 1;
   }
 
   @override
   Widget build(BuildContext context) {
     if (!widget.company.favorite) {
       color = Colors.indigo;
+      width = 1;
       return new Container();
     }
 
     return new Container(
       decoration: BoxDecoration(
           border: Border.all(
+            width: width,
             color: color,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(20))
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
       margin: EdgeInsets.symmetric(vertical: 3),
-      padding: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.only(top: 4, bottom: 4),
       child: ListTile(
         title: widget.company.buildTitle(context),
         subtitle: widget.company.buildSubtitle(context),
+        trailing: Container(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(widget.company.lastPrice.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                  selectText(),
+            ])),
         onTap: () {
           setState(() {
             if (color == Colors.cyanAccent) {
-              if (selComp2 != null) if (widget.company.symbol == selComp2.symbol)
-                selComp2 = null;
-              if (selComp1 != null) if (widget.company.symbol == selComp1.symbol)
-                selComp1 = null;
+              if (selComp2 != null) if (widget.company.symbol ==
+                  selComp2.symbol) selComp2 = null;
+              if (selComp1 != null) if (widget.company.symbol ==
+                  selComp1.symbol) selComp1 = null;
               color = Colors.indigo;
+              width = 1;
             } else if (selComp1 != null && selComp2 != null) {
             } else {
               if (selComp1 == null)
@@ -224,6 +264,7 @@ class CustomTileState extends State<CustomTile> {
               else
                 selComp2 = widget.company;
               color = Colors.cyanAccent;
+              width = 2;
             }
 
             if (selComp1 == null && selComp2 == null)
@@ -235,5 +276,17 @@ class CustomTileState extends State<CustomTile> {
         },
       ),
     );
+  }
+
+  Widget selectText(){
+
+    double change = widget.company.lastPrice - widget.company.open;
+
+    if(change < 0)
+      return Text("${change.toStringAsFixed(3)}", style: TextStyle(color: Colors.red, fontSize: 16));
+    else if(change > 0)
+      return Text("+${change.toStringAsFixed(3)}", style: TextStyle(color: Colors.green, fontSize: 16));
+    else
+      return Text("${change.toStringAsFixed(3)}", style: TextStyle(color: Colors.white, fontSize: 16));
   }
 }
