@@ -58,7 +58,7 @@ class GraphOneState extends State<GraphOne> {
             child: KlinePage(bloc: bloc),
           ),
           Container(
-              height: 100,
+              height: 80,
               color: Colors.black,
               padding: EdgeInsets.only(right: 20),
               child: Row(
@@ -161,18 +161,3 @@ class GraphOneState extends State<GraphOne> {
     });
   }
 }
-/*
-class KlinePageBloc extends KlineBloc {
-  @override
-  void initData() {
-    super.initData();
-    List<KlineData> list = List<KlineData>();
-    number++;
-    if (number >= 10) return;
-    Future<List<KlineData>> apiCallResponse = getHistory('AAPL', 'daily');
-    apiCallResponse.then((value) {
-      list = value;
-      this.updateDataList(list);
-    });
-  }
-}*/

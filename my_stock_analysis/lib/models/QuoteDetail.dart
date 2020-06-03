@@ -115,6 +115,9 @@ class QuoteDetail {
 
     companies = value;
     print(companies);
+    for(int i = 0; i < 5; i++){
+      companies[i].favorite = true;
+    }
     await SharedPreferencesManager.save("Companies", companies);
 
     return encodeListToJson(companies);

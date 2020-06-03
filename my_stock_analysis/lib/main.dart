@@ -59,7 +59,7 @@ class _LoadingHomePageState extends State<LoadingHomePage> {
       print("Companies on initialization: $companies");
 
       //Navigator.of(context).pushNamed('/home');
-      Navigator.pushNamed(context, '/home', arguments: companies);
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false, arguments: companies);
     });
   }
 

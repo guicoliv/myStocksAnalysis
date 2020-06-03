@@ -61,7 +61,7 @@ class GraphTwoState extends State<GraphTwo> {
                     child: createChart(),
                   )),
               Container(
-                  height: 100,
+                  height: 80,
                   color: Colors.black,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
